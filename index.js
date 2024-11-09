@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import authRouter from './routes/auth.js'; //-authRouter es un alias que le elegimos a la importacion, podemos inventar cualquiera
 import eventRouter from './routes/events.js'; //- rutas de eventos
 import {dbConnection} from './database/config.js'
+import cors from 'cors';
 
 // Cargar variables de entorno
 dotenv.config();
@@ -13,9 +14,11 @@ dotenv.config();
 
 //- Crear el servidor de express
 const app = express();
+app.use(cors())
 
 //- Base de datos
 dbConnection();
+
 
 //- Directorio Publico
 app.use(express.static('public'));
@@ -24,11 +27,8 @@ app.use(express.static('public'));
 app.use(express.json());
 
 //------------ Rutas ------------------
-//-- auth, crear , login, renovacion
-app.use('/api/auth', authRouter);
-
-//-- CRUD eventos
-app.use('/api/events', eventRouter);
+app.use('/api/auth', authRouter); //-- auth, crear , login, renovacion
+app.use('/api/events', eventRouter); //-- CRUD eventos
 
 
 //- Escuchar peticiones, nota: no usar el mismo puerto que el front o alguno que este usado

@@ -1,11 +1,11 @@
 import { response } from 'express'; //-opcional para tener el intelligence :rellenos automaticos
 import Evento from '../models/Evento.js';
 
-//- Tomar todos los eventos.
+//--------- Tomar todos los eventos.
 const getEventos = async(req, res = response) => {
     //- cargamos todos
     const eventos = await Evento.find() //-los filtros entrar en el find ({})
-                                .populate('user','name'); //-queremos el contenido de user, y que muestre solo el name
+                            .populate('user','name'); //-queremos el contenido de user, y que muestre solo el name, el _id lo trae por defecto
 
     res.json({
         ok: true,
@@ -13,12 +13,13 @@ const getEventos = async(req, res = response) => {
     });
 };
 
-//- Crear nuevo evento.
+//--------- Crear nuevo evento.
 const crearEvento = async(req, res = response) => {
     const evento = new Evento(req.body);
     try{
         //- el modelo evento en la propiedad user va a tener el uid que tomamos del middleware validarJWT al inicio de las rutas
         evento.user = req.uid;
+        
         //-guardamos en DB
         const eventoGuardado = await evento.save();
 
@@ -34,10 +35,10 @@ const crearEvento = async(req, res = response) => {
     }
 };
 
-//- Actualizar el evento.
+//--------- Actualizar el evento.
 const actualizarEvento = async(req, res = response) => {
     const eventoId = req.params.id; //- tomamos el valor id que viene en los parametros
-    const uid = req.uid;
+    const uid = req.uid; //-id que llega del middleware
 
     try{
         const evento = await Evento.findById(eventoId);
@@ -82,7 +83,7 @@ const actualizarEvento = async(req, res = response) => {
 
 };
 
-//- Eliminar un evento por el id
+//--------- Eliminar un evento por el id
 const eliminarEvento = async (req, res = response) => {
 
     const eventoEliminarId = req.params.id; //- id del evento

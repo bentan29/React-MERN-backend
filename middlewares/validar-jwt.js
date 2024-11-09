@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'
 
 const validarJWT = (req, res = response, next) => {
 
-    //x-token vienen de los headers
+    // x-token vienen de los headers
     const token = req.header('x-token');
 
     //-si no hay token

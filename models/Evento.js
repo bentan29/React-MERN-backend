@@ -25,8 +25,10 @@ const EventoSchema = Schema({
 
 //- Con esta modificacion es solo a la hora de llamarlo. No estamos haciendo la modificacion en la DB
 EventoSchema.method('toJSON', function() {
-    const { __v, _id, ...object } = this.toObject(); // Eliminamons las propiedades internas (__v y _id)
+    const { __v, _id, user, ...object } = this.toObject(); // Eliminamons las propiedades internas (__v y _id)
     object.id = _id; // sustituimos _id por id
+    object.user = { uid: user?._id, name: user?.name };
+
     return object;
 });
 

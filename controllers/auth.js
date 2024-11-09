@@ -5,14 +5,10 @@ import { generarJWT } from '../helpers/jwt.js'
 
 //-- POST ------------------------------------------------------------
 const crearUsuario = async(req, res = response) => {
-
     const { email, password } = req.body; 
-
     try{
-
         //- Buscamos en bd si existe el email que ingresa
         let usuario = await Usuario.findOne({email});
-        
         //- si existe retornamos
         if(usuario) {
             return res.status(400).json({
@@ -20,10 +16,8 @@ const crearUsuario = async(req, res = response) => {
                 msg: 'El correo ya existe en la base de datos'
             });
         }
-
         //--- Si no existe creamos una nueva instancia de Usuario, pasamos la req ---
         usuario = new Usuario(req.body);
-
         //- encriptar contraseña
         const salt = bcrypt.genSaltSync();
         usuario.password = bcrypt.hashSync(password, salt);
@@ -42,7 +36,6 @@ const crearUsuario = async(req, res = response) => {
             name: usuario.name,
             token
         })
-
     }catch(error){
         res.status(500).json({
             ok:false,
@@ -60,7 +53,6 @@ const loginUsuario = async(req, res = response) => {
     try{
         //-Buscamos en bd si existe el email que ingresa
         const usuario = await Usuario.findOne({email});
-
         //- si NO existe email
         if(!usuario) {
             return res.status(400).json({
@@ -68,7 +60,6 @@ const loginUsuario = async(req, res = response) => {
                 msg: 'El usuario no existe con ese email'
             });
         }
-
         //- confiramar los passwords, comparamos pass que escribimos con el de la BD
         const validPassword = bcrypt.compareSync(password, usuario.password);
 
@@ -90,31 +81,30 @@ const loginUsuario = async(req, res = response) => {
             name: usuario.name,
             token
         })
-
     }catch(error) {
         res.status(500).json({
             ok:false,
             msg: 'Por favor hable con el administrador'
         })
     }
-
 }
 
 //-- GET ------------------------------------------------------------
 const revalidarToken = async(req, res = response) => {
-
-    const uid = req.uid;
-    const name = req.name;
+    //-el middleware validarJWT deposíta en la req los valores de uid y name
+    const { uid, name } = req;
 
     //- Generamos un nuevo token
     const token = await generarJWT(uid, name);
-
     res.json({
         ok: true,
+        uid,
         name,
         token,
     })
 }
+
+
 
 export {
     crearUsuario,

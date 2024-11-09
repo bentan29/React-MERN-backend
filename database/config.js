@@ -4,7 +4,7 @@ import { mongoose } from "mongoose";
 
 const dbConnection = async() => {
     try {
-        //-conexion a mongo.. antes! sei hacias asi
+        //-conexion a mongo.. antes! se hacia asi
         // await mongoose.connect(process.env.DB_CNN, {
         //     useNewUrlParser: true,
         //     useUnifiedTopology: true,
