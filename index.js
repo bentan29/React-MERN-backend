@@ -34,7 +34,7 @@ app.use(express.json());
 app.use('/api/auth', authRouter); //-- auth, crear , login, renovacion
 app.use('/api/events', eventRouter); //-- CRUD eventos
 
-app.use('*', (req, res) => {
+app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/index.html'))
 });
 
